@@ -23,34 +23,27 @@ let avg = 0;
 let battle_type = [];
 
 
-async function displayOutput() {
-  await getResult();
-  let output = await createOutput();
-  console.log(output);
-}
-displayOutput();
 
-
-function getResult() {
+async function getResult() {
 
   let count = 0;            
-  data.map((element) => {
+  data.map(async (element) => {
 
-  mostActive(element);
-  attackerOutcome(element);
+  await mostActive(element);
+  await attackerOutcome(element);
 
   if (element.defender_size != null) {
-    count = defenderSize(count, element);
+    count = await defenderSize(count, element);
   }
   
-  battleType(element);
+  await battleType(element);
   })
 
   avg = count / data.length;  // average of Defender Size
 }
 
 
-let mostActive = (element) => {
+let mostActive = async (element) => {
   active_Attacker = mostFreq(element.attacker_king);
   active_Defender = mostFreq(element.defender_king);
   active_region   = mostFreq(element.region);
@@ -80,7 +73,7 @@ let mostFreq= (word) => {
 }
 
 
-let attackerOutcome = (element) => {
+let attackerOutcome = async (element) => {
   if (element.attacker_outcome == "win")
     win++;
   else
@@ -88,7 +81,7 @@ let attackerOutcome = (element) => {
 }
 
 
-let defenderSize = (count, element) => {
+let defenderSize = async (count, element) => {
 
   // ---Logic to get max and min element-- START
   if (min == 0 && max == 0) {
@@ -108,14 +101,14 @@ let defenderSize = (count, element) => {
 
 }
 
-let battleType = element => {
+let battleType = async element => {
 
   if (!battle_type.includes(element.battle_type) && element.battle_type != "")
     battle_type.push(element.battle_type);
 }
 
 
-let createOutput = () => {
+let createOutput = async () => {
   let output = {
     'most_active':{
       'attacker_king': active_Attacker ,
@@ -137,6 +130,14 @@ let createOutput = () => {
   }
   return output;
 }
+
+
+async function displayOutput() {
+  await getResult();
+  let output = await createOutput();
+  console.log(output);
+}
+displayOutput();
 
 
 
