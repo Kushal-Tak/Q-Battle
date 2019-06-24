@@ -29,13 +29,11 @@ async function getResult() {
   let count = 0;            
   data.map(async (element) => {
 
+  if (element.defender_size != null) {
+    count =  defenderSize(count, element);
+  }
   await mostActive(element);
   await attackerOutcome(element);
-
-  if (element.defender_size != null) {
-    count = await defenderSize(count, element);
-  }
-  
   await battleType(element);
   })
 
@@ -81,8 +79,8 @@ let attackerOutcome = async (element) => {
 }
 
 
-let defenderSize = async (count, element) => {
-
+let defenderSize = (count, element) => {
+  
   // ---Logic to get max and min element-- START
   if (min == 0 && max == 0) {
     min = element.defender_size;
